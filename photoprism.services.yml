@@ -1,0 +1,4 @@
+services:
+  photoprism.service:
+    class: Drupal\photoprism\PhotoPrismService
+    arguments: ['@entity_type.manager', '@http_client', '@config.factory', '@database']

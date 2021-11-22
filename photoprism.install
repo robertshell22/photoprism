@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Install and update hooks.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function photoprism_schema() {
+  $schema['photoprism_user_session_ids'] = [
+    'description' => 'Storage of PhotoPrism session ids.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The user id that authenticated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'session_id' => [
+        'description' => 'Session ID required for fetching user data from the PhotoPrism API.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+      ],
+      'expiration' => [
+        'description' => 'Unix timestamp when this access token expires.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+      'tokens' => [
+        'description' => 'Access token required for refreshing the access token once it has expired.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ],
+      'user_id' => [
+        'description' => 'The PhotoPrism user id that authenticated.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'default' => 'big',
+      ],
+    ],
+    'primary key' => ['uid'],
+  ];
+
+  return $schema;
+}

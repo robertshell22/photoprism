@@ -1,0 +1,4 @@
+services:
+  plugin.manager.photoprism_base_table_endpoints:
+    class: Drupal\photoprism_views\PhotoPrismBaseTableEndpointPluginManager
+    parent: default_plugin_manager

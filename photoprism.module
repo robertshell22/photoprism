@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Contains photoprism.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function photoprism_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the Media PhotoPrism module.
+    case 'help.page.photoprism':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('PhotoPrism API wrapper module for connecting to PhotoPrism.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function photoprism_theme($existing, $type, $theme, $path) {
+  $items = [];
+
+  $items['photoprism_image'] = [
+    'variables' => [
+      'raw_image' => NULL,
+      'image' => NULL,
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Template preprocessor for photoprism_image.
+ *
+ * @param $variables
+ */
+function template_preprocess_photoprism_image(&$variables) {
+  $raw_image = $variables['raw_image'];
+
+  $variables['image'] = [
+    '#theme' => 'image',
+    '#uri' => $variables['image'],
+    '#alt' => $raw_image['name'],
+  ];
+
+  $variables['name'] = $raw_image['name'];
+}

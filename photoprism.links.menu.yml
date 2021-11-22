@@ -1,0 +1,5 @@
+photoprism.application_settings:
+  title: PhotoPrism application settings
+  parent: system.admin_config_media
+  description: 'Configure PhotoPrism application settings.'
+  route_name: photoprism.application_settings

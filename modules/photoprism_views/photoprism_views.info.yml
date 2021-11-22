@@ -1,0 +1,8 @@
+name: PhotoPrism Views
+type: module
+description: Views query backend for exposing data from the PhotoPrism API.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: PhotoPrism
+dependencies:
+  - photoprism

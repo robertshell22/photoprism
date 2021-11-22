@@ -1,0 +1,21 @@
+<?php
+/**
+ * @file
+ *
+ * Install related hooks.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function photoprism_views_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install' && \Drupal::moduleHandler()->moduleExists('photoprism_views_example')) {
+    $requirements['photoprism_views_unique'] = [
+      'title' => t('PhotoPrism views modules do not work together'),
+      'description' => t('PhotoPrism views module cannot be used with PhotoPrism views example module. Uninstall PhotoPrism views example module before proceeding.'),
+      'severity' => REQUIREMENT_ERROR,
+    ];
+  }
+  return $requirements;
+}

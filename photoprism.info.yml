@@ -1,0 +1,6 @@
+name: Media PhotoPrism
+type: module
+description: PhotoPrism API connector for importing albums and photos.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: PhotoPrism

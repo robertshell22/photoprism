@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ *
+ * Available variables:
+ * - raw_image: Array of data about the image straight from the PhotoPrism API.
+ * - image: PhotoPrism image.
+ * - name: The name of the image.
+ *
+ * @ingroup themeable
+ */
+#}
+{%- set attributes = attributes.addClass('photoprism-image') %}
+<figure{{ attributes }}>
+  {{ image }}
+  <figcaption>{{ name }}</figcaption>
+</figure>

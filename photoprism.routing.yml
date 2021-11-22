@@ -1,0 +1,7 @@
+photoprism.application_settings:
+  path: '/admin/config/media/photoprism'
+  defaults:
+    _form: 'Drupal\photoprism\Form\ApplicationSettings'
+    _title: 'PhotoPrism Application Settings'
+  requirements:
+    _permission: 'administer site configuration'
