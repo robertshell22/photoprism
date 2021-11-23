@@ -34,12 +34,6 @@ class PhotoPrism extends QueryPluginBase {
    */
   protected $PhotoPrismService;
 
-  /**
-   * PhotoPrism access token manager for loading access tokens from the database.
-   *
-   * @var \Drupal\photoprism\PhotoPrismSessionIdManager
-   */
-  protected $PhotoPrismSessionIdManager;
 
   /**
    * PhotoPrism base table endpoint plugin manager.
@@ -70,13 +64,11 @@ class PhotoPrism extends QueryPluginBase {
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param PhotoPrismService $photoprism_service
-   * @param PhotoPrismSessionIdManager $photoprism_session_id_manager
    * @param PhotoPrismBaseTableEndpointPluginManager $photoprism_base_table_endpoint_plugin_manager
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PhotoPrismService $photoprism_service, PhotoPrismSessionIdManager $photoprism_session_id_manager, PhotoPrismBaseTableEndpointPluginManager $photoprism_base_table_endpoint_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PhotoPrismService $photoprism_service, PhotoPrismBaseTableEndpointPluginManager $photoprism_base_table_endpoint_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->PhotoPrismService = $photoprism_service;
-    $this->PhotoPrismSessionIdManager = $photoprism_session_id_manager;
     $this->photoprismBaseTableEndpointPluginManager = $photoprism_base_table_endpoint_plugin_manager;
     $this->relationships = [];
   }
@@ -89,8 +81,7 @@ class PhotoPrism extends QueryPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('photoprism.client'),
-      $container->get('photoprism.session_id_manager'),
+      $container->get('photoprism.service'),
       $container->get('plugin.manager.photoprism_base_table_endpoints')
     );
   }
@@ -143,14 +134,9 @@ class PhotoPrism extends QueryPluginBase {
    * {@inheritdoc}
    */
   public function execute(ViewExecutable $view) {
-    // Set the units according to the setting on the view.
-    if (!empty($this->options['accept_lang'])) {
-      $this->PhotoPrismService->setAcceptLang($this->options['accept_lang']);
-    }
 
     // Grab data regarding conditions placed on the query.
     $query = $view->build_info['query'];
-    if ($session_ids = $this->PhotoPrismSessionIdManager->loadMultipleSessionId(empty($query['uid']) ? NULL : [$query['uid']])) {
       // Need the data about the table to know which endpoint to use.
       $views_data = Views::viewsData();
       $base_table = $this->view->storage->get('base_table');
@@ -164,12 +150,12 @@ class PhotoPrism extends QueryPluginBase {
       // relationship n verticies away.
       $photoprism_endpoint_ids = array_unique(array_merge([$base_table_data['table']['base']['photoprism_base_table_endpoint_id']], $this->relationships));
       $index = 0;
-      foreach ($session_ids as $uid => $session_id) {
+
         $row = [];
         foreach ($photoprism_endpoint_ids as $photoprism_endpoint_id) {
           /** @var PhotoPrismBaseTableEndpointInterface $photoprism_endpoint */
           $photoprism_endpoint = $this->photoprismBaseTableEndpointPluginManager->createInstance($photoprism_endpoint_id);
-          if ($data = $photoprism_endpoint->getRowBySessionId($session_id, $query)) {
+          if ($data = $photoprism_endpoint->getRow($query)) {
             // The index key is very important. Views uses this to look up values
             // for each row. Without it, views won't show any of your result rows.
             $row = array_merge($row, $data);
@@ -179,12 +165,11 @@ class PhotoPrism extends QueryPluginBase {
         // expose as a row to views.
         if (!empty($row)) {
           $row['index'] = $index++;
-          $row['uid'] = $uid;
           $view->result[] = new ResultRow($row);
         }
       }
-    }
-  }
+
+
 
   /**
    * Adds a simple condition to the query. Collect data on the configured filter
@@ -225,33 +210,6 @@ class PhotoPrism extends QueryPluginBase {
       'field' => $field,
       'value' => $value,
       'operator' => $operator,
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function defineOptions() {
-    $options = parent::defineOptions();
-    $options['accept_lang'] = [
-      'default' => NULL,
-    ];
-
-    return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    parent::buildOptionsForm($form, $form_state);
-
-    $form['accept_lang'] = [
-      '#type' => 'select',
-      '#options' => $this->PhotoPrismService->getAcceptLangOptions(),
-      '#title' => $this->t('Unit system'),
-      '#default_value' => $this->options['accept_lang'],
-      '#description' => $this->t('Set the unit system to use for PhotoPrism API requests.'),
     ];
   }
 

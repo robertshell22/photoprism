@@ -6,9 +6,9 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * Class Images
+ * Class Image
  *
- * @ViewsField("photoprism_images")
+ * @ViewsField("photoprism_image")
  */
 class Images extends FieldPluginBase {
 

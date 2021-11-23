@@ -1,8 +1,0 @@
-name: PhotoPrism views example
-type: module
-description: Example module companion to the Building Views Query Plugins series of articles on lullabot.com. This module serves for illustrative purposes, the full version of the module is photoprism_views.
-core: 8.x
-core_version_requirement: ^8 || ^9
-package: PhotoPrism
-dependencies:
-  - photoprism

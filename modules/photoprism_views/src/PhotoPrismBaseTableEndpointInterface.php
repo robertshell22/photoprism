@@ -3,7 +3,6 @@
 namespace Drupal\photoprism_views;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use League\OAuth2\Client\Token\SessionId;
 
 /**
  * Defines an interface for PhotoPrism base table endpoint plugins.
@@ -34,21 +33,6 @@ interface PhotoPrismBaseTableEndpointInterface extends PluginInspectionInterface
    *   have path parts into the array delimited by colons.
    */
   public function getResponseKey();
-
-  /**
-   * Make a request to a PhotoPrism endpoint using the given access token and return
-   * a ResultRow object.
-   *
-   * @param \League\OAuth2\Client\Token\SessionId $session_id
-   *   Oauth access token object. Make the request on behalf of the user
-   *   represented by the token.
-   * @param array|null $arguments
-   *   Pass along any additional arguments, usually filter/sort params.
-   *
-   * @return array|null
-   *   Associative array keyed by views field name.
-   */
-  public function getRowBySessionId(SessionId $session_id, $arguments = NULL);
 
   /**
    * Inform views about the fields this endpoint exposes.

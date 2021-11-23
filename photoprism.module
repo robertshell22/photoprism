@@ -36,6 +36,13 @@ function photoprism_theme($existing, $type, $theme, $path) {
     ],
   ];
 
+  $items['photoprism_thumb'] = [
+    'variables' => [
+      'raw_image' => NULL,
+      'image' => NULL,
+    ],
+  ];
+
   return $items;
 }
 
@@ -50,6 +57,12 @@ function template_preprocess_photoprism_image(&$variables) {
   $variables['image'] = [
     '#theme' => 'image',
     '#uri' => $variables['image'],
+    '#alt' => $raw_image['name'],
+  ];
+
+  $variables['thumb'] = [
+    '#theme' => 'image',
+    '#uri' => $variables['thumb'],
     '#alt' => $raw_image['name'],
   ];
 

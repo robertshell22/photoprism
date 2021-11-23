@@ -1,4 +1,7 @@
 services:
   photoprism.service:
     class: Drupal\photoprism\PhotoPrismService
-    arguments: ['@entity_type.manager', '@http_client', '@config.factory', '@database']
+    arguments: ['@entity_type.manager', '@config.factory', '@http_client', '@database']
+  photoprism.session_id:
+    class: Drupal\photoprism\PhotoPrismService::getSessionId
+    arguments: [ '@entity_type.manager', '@config.factory', '@http_client', '@database' ]

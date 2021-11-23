@@ -2,15 +2,19 @@
 
 namespace Drupal\photoprism_views\Plugin\PhotoPrismBaseTableEndpoint;
 
+use Drupal\photoprism\PhotoPrismService;
 use Drupal\photoprism_views\PhotoPrismBaseTableEndpointBase;
 
+
 /**
- * PhotoPrism Activity Time Series endpoint.
+ * PhotoPrism Albums endpoint.
+ * @param PhotoPrismService $photoprism_service
  *
  * @PhotoPrismBaseTableEndpoint(
  *   id = "albums",
  *   name = @Translation("PhotoPrism albums"),
  *   description = @Translation("Retrieves albums.")
+ *   response_key = "UID"
  * )
  */
 class Albums extends PhotoPrismBaseTableEndpointBase {
@@ -18,50 +22,47 @@ class Albums extends PhotoPrismBaseTableEndpointBase {
   /**
    * {@inheritdoc}
    */
-  public function getRowBySessionId(SessionId $sessionId, $arguments = NULL) {
-    if ($data = $this->PhotoPrismService->getAlbums()) {
-      $data = $data->toArray();
-      $data = $this->filterArrayByPath($data, array_keys($this->getFields()));
+  public function getRow( $arguments = NULL) {
 
-      $config_factory = \Drupal::service('config.factory');
-      $config = $config_factory->get('photoprism.application_settings');
 
-      $api_url = $config['server_url'];
+      if ($data = $this->PhotoPrismService->getAlbums($arguments)) {
+        $data = $data->toArray();
 
-      // Adjust avatar and avatar150
-      $data['Thumb'] = $api_url.'/t/'.$data['Thumb'].'/shellfam/tile_500';
+        $config_factory = \Drupal::service('config.factory');
+        $config = $config_factory->get('photoprism.application_settings');
 
-      // Change memberSince to timestamp
-      $data['memberSince'] = strtotime($data['memberSince']);
+        $api_url = $config['server_url'];
 
-      return $data;
+        // Adjust avatar and avatar150
+        $data['Thumb'] = $api_url . '/t/' . $data['Thumb'] . '/shellfam/tile_500';
+
+        return $data;
+      }
     }
-  }
+
 
   /**
    * {@inheritdoc}
    */
   public function getFields() {
-    $integer = ['id' => 'numeric'];
-    $float = [
-      'id' => 'numeric',
-      'float' => TRUE,
-    ];
-    $standard = [
-      'id' => 'standard',
-    ];
     return [
       'UID' => [
         'title' => $this->t('Album ID'),
-        'field' => $standard,
+        'field' => [
+          'id' =>'photoprism_uid',
+        ],
       ],
       'Title' => [
-        'title' => $this->t('Album Title'),
-        'field' => $standard,
+        'title' => $this->t('Title'),
+        'field' => [
+          'id' =>'photoprism_title',
+        ],
       ],
       'PhotoCount' => [
         'title' => $this->t('Photo Count'),
-        'field' => $integer,
+        'field' => [
+          'id' =>'photoprism_count',
+        ],
       ],
       'Thumb' => [
         'title' => $this->t('Thumbnail'),

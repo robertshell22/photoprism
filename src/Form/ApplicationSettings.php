@@ -33,15 +33,7 @@ class ApplicationSettings extends ConfigFormBase {
     $config = $this->config('photoprism.application_settings');
 
     $instructions = <<<INSTRUCTIONS
-<p>In order to communicate with the PhotoPrism API, you need to create a PhotoPrism Application, enter in the application parameters below, and have your users connect their PhotoPrism accounts. Follow these steps:</p>
-<ol>
-  <li>Visit https://dev.photoprism.com/apps/new and follow the steps to create a new application. If you already have an application, skip to the next step.</li>
-  <li>Go to https://dev.photoprism.com/apps and click on the name of your application.</li>
-  <li>Copy and paste the OAuth 2.0 Client ID and Client Secret into the fields below.</li>
-  <li>Save the settings.</li>
-  <li>Instruct your users to visit <em>/user/[uid]/photoprism</em> and follow the steps there to connect their PhotoPrism accounts.</li>
-  <li>At this point you should be able to build views with the PhotoPrism views module, or otherwise use the services provided if your a module developer basing your code on photoprism module.</li>
-</ol>
+<p>In order to communicate with the PhotoPrism API, you need to provide a username and password as well as the full API url.</p>
 INSTRUCTIONS;
 
     $form['instructions'] = [
@@ -50,8 +42,8 @@ INSTRUCTIONS;
 
     $form['server_url'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Server URL'),
-      '#description' => $this->t('Enter the URL to your PhotoPrism server.'),
+      '#title' => $this->t('PhotoPrism Server API URL'),
+      '#description' => $this->t('Enter the URL to your PhotoPrism server\'s API. (ex. https://server.com/api/v1)'),
       '#default_value' => $config->get('server_url'),
     ];
 
@@ -69,14 +61,6 @@ INSTRUCTIONS;
       '#default_value' => $config->get('password'),
     ];
 
-    $form['server_protocol'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Use SSL?'),
-      '#options' => array(
-        'https' => t('Yes'),
-      ),
-      '#default_value' => $config->get('server_protocol'),
-    );
 
     return parent::buildForm($form, $form_state);
   }
