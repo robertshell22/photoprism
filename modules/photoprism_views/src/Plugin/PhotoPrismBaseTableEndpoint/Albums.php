@@ -13,7 +13,7 @@ use Drupal\photoprism_views\PhotoPrismBaseTableEndpointBase;
  * @PhotoPrismBaseTableEndpoint(
  *   id = "albums",
  *   name = @Translation("PhotoPrism albums"),
- *   description = @Translation("Retrieves albums.")
+ *   description = @Translation("Retrieves albums."),
  *   response_key = "UID"
  * )
  */
